@@ -1,0 +1,1 @@
+export const toScalableUnits = (size) => (`${size}em`);
