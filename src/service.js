@@ -64,7 +64,7 @@ export class Board {
 
     getAreaByColor(tiles, color) {
         let area = [];
-        let queue = tiles.slice();
+        let queue = [...tiles];
         let step = null;
 
         while((step = queue.pop()) !== undefined) {
@@ -79,24 +79,31 @@ export class Board {
         return area;
     }
 
-    nextMoves(tiles) {
-        let steps = [];
+    getSiblings(tiles) {
+        const siblings = [];
 
-        const fn = (tile) => {
+        for(const tile of tiles) {
             for(const move of this.movements()) {
                 const row = tile.row + move[0];
                 const column = tile.column + move[1]; 
                 
                 if (row >= 0 && row < this.rows && column >= 0 && column < this.columns) {
-                    steps.push(this.getTile(row, column));
+                    const sibling = this.getTile(row, column);
+                    if (!this.contains(siblings, sibling)) {
+                        siblings.push(sibling);
+                    }
                 }
             }
-
-            return steps;
         }
 
+        return siblings;
+    }
+
+    nextMoves(tiles) {
+        const steps = [];        
+
         for(const tile of tiles) {
-            const pretenders = fn(tile);
+            const pretenders = this.getSiblings([tile]);
             for (const pretender of pretenders) {
                 if (!this.contains(steps, pretender)) {
                     steps.push(pretender);
@@ -121,28 +128,42 @@ export class Board {
     generateColor(){
         return Math.floor(Math.random() * this.colors);
     }
+
+    getBestSolution() {
+        const example = new Board(this.rows, this.columns, this.colors);
+        example.tiles = this.tiles.map(x => new Tile(x.row, x.column, x.color));
+
+        const tile = example.getTile(0, 0);
+        tile.setAsVisited();
+        let visited = example.getVisited();
+        let step = 0;
+
+        do {
+            const siblings = example.getSiblings(visited);  
+            let bestArea = [];
+            let bestSibling = {};
+            for(const sibling of siblings) {
+                if (sibling.isVisited()) {
+                    continue;
+                }
+                const area = example.getAreaByColor([...visited, sibling], sibling.color);
+
+                if (area && area.length > bestArea.length) {
+                    bestArea = area;
+                    bestSibling = sibling;
+                }
+            }
+
+            for(const tile of bestArea) {
+                tile.setAsVisited();
+                tile.setColor(bestSibling.color);
+            }
+
+            visited = example.getVisited();
+            step++;            
+        }
+        while (visited.length < example.rows * example.columns)
+
+        return step;
+    }
 }
-
-// const field = new Field(4, 3, 2);
-// const cell = field.getCell(0, 0);
-// let bestArea = [];
-// let visited = [cell];
-// console.log(field.getCells());
-
-// for(const step of field.getAvailableSteps(cell)) {
-//     if (step.color !== cell.color) {
-//         const area = field.getAreaByColor(step, step.color);
-//         if (bestArea.length < area.length) {
-//             bestArea = area;
-//         }
-//     }
-// }
-
-
-// for(let cell of bestArea) {
-//     cell.color = cell.color;
-// }
-
-
-// //field.drawField();
-// console.log(bestArea);

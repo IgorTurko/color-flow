@@ -2,3 +2,5 @@
     box-sizing: border-box;
     float: left;
 }
+
+.tile.visited {}

@@ -6,7 +6,8 @@ let board = {};
 const defaultState = {
     tiles: [],
     nextMoves: [],
-    step: 0
+    step: 0,
+    limit: 10
 }
 
 export default (state = defaultState, action) => {
@@ -19,7 +20,8 @@ export default (state = defaultState, action) => {
             return {
                 ...state,
                 tiles: [...board.getTiles()],
-                nextMoves: [...board.nextMoves([tile])]
+                nextMoves: [...board.nextMoves([tile])],
+                limit: board.getBestSolution()
             }
         }
 
