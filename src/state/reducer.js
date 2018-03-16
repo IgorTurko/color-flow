@@ -1,5 +1,5 @@
-import { CREATE_BOARD, MAKE_MOVE } from './actions';
-import { Board, Tile } from '../service';
+import { CREATE_BOARD, MAKE_TURN } from './actions';
+import { Board } from '../service';
 
 let board = {};
 
@@ -25,7 +25,7 @@ export default (state = defaultState, action) => {
             }
         }
 
-        case MAKE_MOVE: {  
+        case MAKE_TURN: {  
             const tile = board.getTile(action.row, action.column);
             board.getAreaByColor([...board.getVisited(), tile], tile.color)
                 .forEach(x => x.setAsVisited(x));

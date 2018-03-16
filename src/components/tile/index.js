@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React from 'react';
 
 import { toScalableUnits } from '../../helpers';
 
@@ -11,16 +11,18 @@ export default class Tile extends React.PureComponent {
         if (makeTurn) {
             makeTurn();
         }
-        
     }
 
     render() {
-        const { color, size } = this.props;
+        const { color, size, isVisited } = this.props;
         const unit = toScalableUnits(size);
 
-        return <div className="tile"
+        return <div className={"tile" + (isVisited ? " not-visited": "")}
             onClick={() => this.onMakeTurn()} 
-            style={{backgroundColor: color, width: unit, height: unit}}>
+            style={{width: unit, height: unit}}>
+                <div className="figure" 
+                    style={{background: `radial-gradient(circle at 33% 33%, ${color}, #000)`}}>
+                </div>
         </div>;
     }
 }

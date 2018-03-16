@@ -1,4 +1,8 @@
-.board {
+.board-wrapper {
     margin: 0 auto;
     overflow: hidden;
+    box-sizing: content-box;
+}
+.board {
+    /*border: 1px solid black;*/  
 }

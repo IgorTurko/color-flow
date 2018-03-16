@@ -8,10 +8,10 @@ export const createBoard = (rows, columns, colors) => {
     }
 }
 
-export const MAKE_MOVE = 'MAKE_MOVE';
-export const makeMove = (row, column) => {
+export const MAKE_TURN = 'MAKE_TURN';
+export const makeTurn = (row, column) => {
     return {
-        type: MAKE_MOVE,
+        type: MAKE_TURN,
         row,
         column
     }
